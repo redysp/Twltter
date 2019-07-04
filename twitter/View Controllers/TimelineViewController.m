@@ -10,13 +10,16 @@
 #import "APIManager.h"
 #import "TweetCell.h"
 #import "Tweet.h"
+#import "ComposeViewController.h"
 
-@interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate>
+
+@interface TimelineViewController () <ComposeViewControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+
+// Step #1: subview of view Controller (can be viewed at storyboard also)
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
-
 
 
 // Property for array of tweets
@@ -29,14 +32,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Step #3: set dataSource and delegate in viewDidLoad
+    
     // Complete "handshake"
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
-    // Refresh
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [self loadTimeline];
+    
+    // Initialize a UIRefreshControl
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(loadTimeline)forControlEvents:UIControlEventValueChanged];
+    
+    // Add to tableView
+    [self.tableView insertSubview:self.refreshControl atIndex:0];
+    
+    
+    
+}
+
+- (void)loadTimeline {
     
     // Get timeline tweets
+    
+    // Step #5 API manager calls completion
+    
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
             NSLog(@"😎😎😎 Successfully loaded home timeline");
@@ -44,31 +64,43 @@
                 NSString *text = tweet.text;
                 NSLog(@"%@", text);
             }
+            // Step 6
             self.tweets = tweets;
             
-            [self.tableView reloadData]; 
+            // Step 7
+            [self.tableView reloadData];
+            
+            
         } else {
             NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
         }
+        [self.refreshControl endRefreshing];
     }];
 }
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    UINavigationController *navigationController = [segue destinationViewController];
+    ComposeViewController *composeController = (ComposeViewController*)navigationController.topViewController;
+    composeController.delegate = self;
 }
-*/
 
 
+// Step #8
+
+// Step #9
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     
     // Get reusable table cell
@@ -92,30 +124,27 @@
     return cell;
 }
 
+// Step 10
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.tweets.count;
 }
 
-// Refresh function
+- (void)didTweet:(Tweet *)tweet{
+    
+    // Create Mutable Array
+    NSMutableArray *updatedTweets = [[NSMutableArray alloc]init];
+    updatedTweets = [NSMutableArray arrayWithArray:self.tweets];
 
-- (void)beginRefresh:(UIRefreshControl *)refreshControl {
     
-    // Create NSURL and NSURLRequest
+    // Add tweet to it
+    [updatedTweets addObject:tweet];
     
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
-                                                          delegate:nil
-                                                     delegateQueue:[NSOperationQueue mainQueue]];
-    session.configuration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+    // Make array back
+    self.tweets = updatedTweets;
+    NSLog(@"AHHHHHHHHHHHHHHHHHHH");
+    NSLog(@"%@", self.tweets);
     
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        // ... Use the new data to update the data source ...
-        // Reload the tableView now that there is new data
-        [self.tableView reloadData];
-        // Tell the refreshControl to stop spinning
-        [refreshControl endRefreshing];
-     }];
-    
-    [task resume];
+    [self.tableView reloadData];
 }
 
 @end

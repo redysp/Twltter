@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// Step #2: Define a custom table view cell and it's reuse identifier 
+
 @interface TweetCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (weak, nonatomic) IBOutlet UILabel *name;
