@@ -1,22 +1,22 @@
-# Project 3 - *Name of App Here*
+# Project 3 - Twltter
 
-**Name of your app** is a basic twitter app to read and compose tweets the [Twitter API](https://apps.twitter.com/).
+Twltter is a basic twitter app to read and compose tweets the [Twitter API](https://apps.twitter.com/).
 
-Time spent: **X** hours spent in total
+Time spent: 20 hours spent in total
 
 ## User Stories
 
 The following **required** functionality is completed:
 
-- [ ] User sees app icon in home screen and styled launch screen
-- [ ] User can sign in using OAuth login flow
-- [ ] User can Logout
-- [ ] User can view last 20 tweets from their home timeline
-- [ ] In the home timeline, user can view tweet with the user profile picture, username, tweet text, and timestamp.
-- [ ] User can pull to refresh.
-- [ ] User can tap the retweet and favorite buttons in a tweet cell to retweet and/or favorite a tweet.
-- [ ] User can compose a new tweet by tapping on a compose button.
-- [ ] Using AutoLayout, the Tweet cell should adjust it's layout for iPhone 7, Plus and SE device sizes as well as accommodate device rotation.
+- [X] User sees app icon in home screen and styled launch screen
+- [X] User can sign in using OAuth login flow
+- [X] User can Logout
+- [X] User can view last 20 tweets from their home timeline
+- [X] In the home timeline, user can view tweet with the user profile picture, username, tweet text, and timestamp.
+- [X] User can pull to refresh.
+- [X] User can tap the retweet and favorite buttons in a tweet cell to retweet and/or favorite a tweet.
+- [X] User can compose a new tweet by tapping on a compose button.
+- [X] Using AutoLayout, the Tweet cell should adjust it's layout for iPhone 7, Plus and SE device sizes as well as accommodate device rotation.
 
 The following **optional** features are implemented:
 
@@ -25,7 +25,7 @@ The following **optional** features are implemented:
   - Contains the user header view: picture and tagline
   - Contains a section with the users basic stats: # tweets, # following, # followers
   - [ ] Profile view should include that user's timeline
-- [ ] User should display the relative timestamp for each tweet "8m", "7h"
+- [X] User should display the relative timestamp for each tweet "8m", "7h"
 - [ ] User should be able to unretweet and unfavorite and should decrement the retweet and favorite count. Refer to [[this guide|unretweeting]] for help on implementing unretweeting.
 - [ ] Links in tweets are clickable.
 - [ ] User can tap the profile image in any tweet to see another user's profile
@@ -69,7 +69,7 @@ List an 3rd party libraries, icons, graphics, or other assets you used in your a
 
 ## License
 
-    Copyright [yyyy] [name of copyright owner]
+    Copyright 2019 Carlos Power
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
