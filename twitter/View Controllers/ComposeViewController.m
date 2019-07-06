@@ -17,7 +17,6 @@
 - (IBAction)closeView:(id)sender;
 - (IBAction)sendTweet:(id)sender;
 
-
 @end
 
 @implementation ComposeViewController
@@ -44,7 +43,6 @@
             [self.delegate didTweet:composedTweet];
             NSLog(@"Compose Tweet Success!");
         }
-        
     }];
 }
 - (IBAction)closeView:(id)sender {

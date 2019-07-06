@@ -8,6 +8,7 @@
 
 #import "Tweet.h"
 #import "User.h"
+#import "DateTools.h"
 
 @implementation Tweet
 
@@ -20,7 +21,7 @@
         if(originalTweet != nil){
             NSDictionary *userDictionary = dictionary[@"user"];
             self.retweetedByUser = [[User alloc] initWithDictionary:userDictionary];
-            
+
             // Change tweet to original tweet
             dictionary = originalTweet;
         }
@@ -35,20 +36,19 @@
         NSDictionary *user = dictionary[@"user"];
         self.user = [[User alloc] initWithDictionary:user];
         
-        // Format and set createdAtString
-        
         // Format createdAt date string
         NSString *createdAtOriginalString = dictionary[@"created_at"];
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         // Configure the input format to parse the date string
         formatter.dateFormat = @"E MMM d HH:mm:ss Z y";
+        
         // Convert String to Date
         NSDate *date = [formatter dateFromString:createdAtOriginalString];
-        // Configure output format
-        formatter.dateStyle = NSDateFormatterShortStyle;
-        formatter.timeStyle = NSDateFormatterNoStyle;
+        NSDate *timeAgoDate = [NSDate dateWithTimeIntervalSinceNow:date.timeIntervalSinceNow];
+        
         // Convert Date to String
-        self.createdAtString = [formatter stringFromDate:date];
+        self.createdAtString = [NSString stringWithFormat:@"%@", timeAgoDate.shortTimeAgoSinceNow];
+        
         
     }
     return self;

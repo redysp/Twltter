@@ -11,7 +11,9 @@
 #import "TweetCell.h"
 #import "Tweet.h"
 #import "ComposeViewController.h"
-
+#import "AppDelegate.h"
+#import "LoginViewController.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface TimelineViewController () <ComposeViewControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 
@@ -21,6 +23,7 @@
 
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 
+- (IBAction)logOut:(id)sender;
 
 // Property for array of tweets
 @property (strong, nonatomic) NSArray *tweets;
@@ -46,17 +49,11 @@
     
     // Add to tableView
     [self.tableView insertSubview:self.refreshControl atIndex:0];
-    
-    
-    
 }
 
 - (void)loadTimeline {
     
-    // Get timeline tweets
-    
     // Step #5 API manager calls completion
-    
     [[APIManager shared] getHomeTimelineWithCompletion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
             NSLog(@"😎😎😎 Successfully loaded home timeline");
@@ -70,7 +67,6 @@
             // Step 7
             [self.tableView reloadData];
             
-            
         } else {
             NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
         }
@@ -78,13 +74,10 @@
     }];
 }
 
-
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 
 #pragma mark - Navigation
 
@@ -97,9 +90,6 @@
     composeController.delegate = self;
 }
 
-
-// Step #8
-
 // Step #9
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     
@@ -108,6 +98,7 @@
     Tweet *specificTweet = self.tweets[indexPath.row];
     User *user = specificTweet.user;
     
+    cell.tweet = specificTweet;
     // Gets name and handle from Tweet -> User class
     cell.name.text = user.name;
     cell.handle.text = [@"@" stringByAppendingString:user.screenName];
@@ -120,6 +111,9 @@
                          "%d", specificTweet.retweetCount];
     cell.likesCount.text = [NSString stringWithFormat:@
                       "%d", specificTweet.favoriteCount];
+    
+    NSURL *imageURL = [NSURL URLWithString:user.image];
+    [cell.image setImageWithURL:imageURL];
     
     return cell;
 }
@@ -135,16 +129,26 @@
     NSMutableArray *updatedTweets = [[NSMutableArray alloc]init];
     updatedTweets = [NSMutableArray arrayWithArray:self.tweets];
 
-    
     // Add tweet to it
     [updatedTweets addObject:tweet];
     
     // Make array back
     self.tweets = updatedTweets;
-    NSLog(@"AHHHHHHHHHHHHHHHHHHH");
     NSLog(@"%@", self.tweets);
     
     [self.tableView reloadData];
 }
 
+- (IBAction)logOut:(id)sender {
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+    appDelegate.window.rootViewController = loginViewController;
+    
+    [[APIManager shared] logout];
+}
+
 @end
+
